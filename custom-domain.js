@@ -49,9 +49,9 @@ module.exports = class CustomDomain {
 
     if (domain) {
       const domainName = this.getDomainName(domain.url);
-
+      const basePath = this.getBasePath(domain.basePath);
       if (domainName) {
-        return this.removeMapping(domainName);
+        return this.removeMapping(basePath, domainName);
       }
     }
   }

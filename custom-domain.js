@@ -46,7 +46,6 @@ module.exports = class CustomDomain {
 
   beforeRemove() {
     const domain = this.serverless.service.custom.domain;
-
     if (domain) {
       const domainName = this.getDomainName(domain.url);
       const basePath = this.getBasePath(domain.basePath);

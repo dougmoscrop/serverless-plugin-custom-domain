@@ -26,14 +26,15 @@ module.exports = class CustomDomain {
   beforePackage() {
     const custom = this.serverless.service.custom;
 
-    if (custom && custom.domain) {
-      const domainName = this.getDomainName(custom.domain);
+    if (custom && custom.domain && custom.domain.url) {
+      const domainName = this.getDomainName(custom.domain.url);
+      const basePath = this.getBasePath(custom.domain.basePath);
 
       if (domainName) {
         const deploymentId = this.getApiGatewayDeploymentId();
 
         if (deploymentId) {
-          this.addCustomResource(domainName, deploymentId);
+          this.addCustomResource(domainName, basePath,deploymentId);
         } else {
           throw new Error('Could not find AWS::ApiGateway::Deployment resource in CloudFormation template!');
         }

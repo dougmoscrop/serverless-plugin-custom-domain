@@ -10,6 +10,7 @@ test.beforeEach(t => {
     Resources: {}
   };
   t.context.serverless = {
+    version: '1.13.2',
     getProvider: () => null,
     service: {
       provider: {

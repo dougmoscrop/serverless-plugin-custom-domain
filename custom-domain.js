@@ -48,7 +48,7 @@ module.exports = class CustomDomain {
     const domain = this.serverless.service.custom.domain;
 
     if (domain) {
-      const domainName = this.getDomainName(domain);
+      const domainName = this.getDomainName(domain.url);
 
       if (domainName) {
         return this.removeMapping(domainName);

@@ -1,6 +1,6 @@
 {
   "name": "serverless-plugin-custom-domain",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Set up and cut over custom domains for API Gateway",
   "main": "custom-domain.js",
   "scripts": {

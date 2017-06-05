@@ -25,32 +25,36 @@ module.exports = class CustomDomain {
 
   beforePackage() {
     const custom = this.serverless.service.custom;
+    let domainName, basePath;
+    if (typeof custom.domain === 'string') {
+      domainName = this.getDomainName(custom.domain);
+      basePath = '(none)';
+    }
+    if (typeof custom.domain === 'object') {
+      domainName = this.getDomainName(custom.domain.url);
+      basePath = this.getBasePath(custom.domain.basePath);
+    }
 
-    if (custom && custom.domain) {
-      const domainName = this.getDomainName(custom.domain);
+    if (domainName) {
+      const deploymentId = this.getApiGatewayDeploymentId();
 
-      if (domainName) {
-        const deploymentId = this.getApiGatewayDeploymentId();
-
-        if (deploymentId) {
-          this.addCustomResource(domainName, deploymentId);
-        } else {
-          throw new Error('Could not find AWS::ApiGateway::Deployment resource in CloudFormation template!');
-        }
+      if (deploymentId) {
+        this.addCustomResource(domainName, basePath, deploymentId);
       } else {
-        throw new Error('custom.domain must either be a string or an object with a name property');
+        throw new Error('Could not find AWS::ApiGateway::Deployment resource in CloudFormation template!');
       }
+    } else {
+      throw new Error('custom.domain must either be a string or an object with a name property');
     }
   }
 
   beforeRemove() {
     const domain = this.serverless.service.custom.domain;
-
     if (domain) {
-      const domainName = this.getDomainName(domain);
-
+      const domainName = this.getDomainName(domain.url);
+      const basePath = this.getBasePath(domain.basePath);
       if (domainName) {
-        return this.removeMapping(domainName);
+        return this.removeMapping(basePath, domainName);
       }
     }
   }

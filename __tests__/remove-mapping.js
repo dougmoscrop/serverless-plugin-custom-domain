@@ -10,6 +10,7 @@ test.beforeEach(t => {
     request: Function.prototype
   };
   t.context.serverless = {
+    version: '1.13.2',
     getProvider: () => t.context.provider,
     service: {
       provider: {
@@ -26,9 +27,7 @@ test.beforeEach(t => {
 test('removeMapping calls remove', t => {
   const mock = sinon.mock(t.context.provider)
 
-  mock.expects('request').returns({
-    promise: () => Promise.resolve()
-  });
+  mock.expects('request').returns(Promise.resolve());
 
   return t.context.plugin.removeMapping('(none)', 'foo.com')
     .then(() => {

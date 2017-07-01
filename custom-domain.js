@@ -1,5 +1,7 @@
 'use strict';
 
+const semver = require('semver');
+
 const addCustomResource = require('./lib/add-custom-resource');
 const removeMapping = require('./lib/remove-mapping');
 const utils = require('./lib/utils');
@@ -7,6 +9,10 @@ const utils = require('./lib/utils');
 module.exports = class CustomDomain {
 
   constructor(serverless, options) {
+    if (!semver.satisfies(serverless.version, '>= 1.13')) {
+      throw new Error('serverless-plugin-split-stacks requires serverless 1.13 or higher!');
+    }
+
     this.serverless = serverless;
     this.options = options;
     this.provider = this.serverless.getProvider('aws');
@@ -24,21 +30,17 @@ module.exports = class CustomDomain {
   }
 
   beforePackage() {
-    const custom = this.serverless.service.custom;
+    const domain = this.serverless.service.custom.domain;
 
-    if (custom && custom.domain) {
-      const domainName = this.getDomainName(custom.domain);
+    if (domain) {
+      const domainName = this.getDomainName(domain);
+      const basePath = this.getBasePath(domain);
+      const deploymentId = this.getApiGatewayDeploymentId();
 
-      if (domainName) {
-        const deploymentId = this.getApiGatewayDeploymentId();
-
-        if (deploymentId) {
-          this.addCustomResource(domainName, deploymentId);
-        } else {
-          throw new Error('Could not find AWS::ApiGateway::Deployment resource in CloudFormation template!');
-        }
+      if (deploymentId) {
+        this.addCustomResource(domainName, basePath, deploymentId);
       } else {
-        throw new Error('custom.domain must either be a string or an object with a name property');
+        throw new Error('Could not find AWS::ApiGateway::Deployment resource in CloudFormation template!');
       }
     }
   }
@@ -48,10 +50,9 @@ module.exports = class CustomDomain {
 
     if (domain) {
       const domainName = this.getDomainName(domain);
+      const basePath = this.getBasePath(domain);
 
-      if (domainName) {
-        return this.removeMapping(domainName);
-      }
+      return this.removeMapping(basePath, domainName);
     }
   }
 

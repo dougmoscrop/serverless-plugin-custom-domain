@@ -9,6 +9,7 @@ test.beforeEach(t => {
     Resources: {}
   };
   t.context.serverless = {
+    version: '1.13.2',
     getProvider: () => null,
     service: {
       provider: {
@@ -37,4 +38,16 @@ test('getDomainName string', t => {
 
 test('getDomainName object', t => {
   t.true('bar' === t.context.plugin.getDomainName({ name: 'bar' }));
+});
+
+test('getBasePath set', t => {
+  t.true('baz' === t.context.plugin.getBasePath({ basePath: 'baz' }));
+});
+
+test('getBasePath undefined', t => {
+  t.true('(none)' === t.context.plugin.getBasePath({}));
+});
+
+test('getBasePath emptry string', t => {
+  t.true('(none)' === t.context.plugin.getBasePath({ basePath: '' }));
 });

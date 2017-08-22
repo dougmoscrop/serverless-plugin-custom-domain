@@ -10,7 +10,7 @@ module.exports = class CustomDomain {
 
   constructor(serverless, options) {
     if (!semver.satisfies(serverless.version, '>= 1.13')) {
-      throw new Error('serverless-plugin-split-stacks requires serverless 1.13 or higher!');
+      throw new Error('serverless-plugin-custom-domain requires serverless 1.13 or higher!');
     }
 
     this.serverless = serverless;

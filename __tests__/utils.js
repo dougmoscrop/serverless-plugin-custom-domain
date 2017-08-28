@@ -60,7 +60,7 @@ test('finds stage name from deployment', t => {
 
 test('finds stage name from stage', t => {
   const stageName = {
-    value: 'attributes_dev',
+    value: 'foo_dev',
     from: {
       type: 'AWS::ApiGateway::Stage',
       key: 'ApiGatewayStage'

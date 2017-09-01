@@ -8,13 +8,17 @@ test.beforeEach(t => {
   t.context.template = {
     Resources: {}
   };
+  t.context.resources = {
+    Resources: {}
+  };
   t.context.serverless = {
     version: '1.13.2',
     getProvider: () => null,
     service: {
       provider: {
         compiledCloudFormationTemplate: t.context.template
-      }
+      },
+      resources: t.context.resources
     }
   };
   t.context.plugin = new Plugin(t.context.serverless, {
@@ -30,6 +34,60 @@ test('finds deployment id', t => {
   };
 
   t.true(id === t.context.plugin.getApiGatewayDeploymentId());
+});
+
+test('finds stage name from deployment', t => {
+  const stageName = {
+    value: 'dev',
+    from: {
+      type: 'AWS::ApiGateway::Deployment',
+      key: 'ApiGatewayDeployment12345'
+    }
+  };
+
+  t.context.template.Resources['ApiGatewayDeployment12345'] = {
+    Type: 'AWS::ApiGateway::Deployment',
+    Properties: {
+      StageName: 'dev'
+    }
+  };
+
+  const realStageName = t.context.plugin.getApiGatewayStageName();
+  t.true(stageName.value === realStageName.value);
+  t.true(stageName.from.type === realStageName.from.type);
+  t.true(stageName.from.key === realStageName.from.key);
+});
+
+test('finds stage name from stage', t => {
+  const stageName = {
+    value: 'foo_dev',
+    from: {
+      type: 'AWS::ApiGateway::Stage',
+      key: 'ApiGatewayStage'
+    }
+  };
+
+  t.context.template.Resources['ApiGatewayDeployment12345'] = {
+    Type: 'AWS::ApiGateway::Deployment',
+    Properties: {
+      StageName: 'dev'
+    }
+  };
+
+  t.context.resources.Resources['ApiGatewayStage'] = {
+    Type: 'AWS::ApiGateway::Stage',
+    Properties: {
+      StageName: 'attributes_dev',
+      DeploymentId: {
+        Ref: 'ApiGatewayDeployment12345'
+      }
+    }
+  };
+
+  const realStageName = t.context.plugin.getApiGatewayStageName();
+  t.true(stageName.value === realStageName.value);
+  t.true(stageName.from.type === realStageName.from.type);
+  t.true(stageName.from.key === realStageName.from.key);
 });
 
 test('getDomainName string', t => {

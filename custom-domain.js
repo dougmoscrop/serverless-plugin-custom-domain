@@ -36,9 +36,10 @@ module.exports = class CustomDomain {
       const domainName = this.getDomainName(domain);
       const basePath = this.getBasePath(domain);
       const deploymentId = this.getApiGatewayDeploymentId();
+      const stageName = this.getApiGatewayStageName();
 
       if (deploymentId) {
-        this.addCustomResource(domainName, basePath, deploymentId);
+        this.addCustomResource(domainName, basePath, deploymentId, stageName);
       } else {
         throw new Error('Could not find AWS::ApiGateway::Deployment resource in CloudFormation template!');
       }

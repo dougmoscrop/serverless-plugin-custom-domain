@@ -77,7 +77,7 @@ test('finds stage name from stage', t => {
   t.context.resources.Resources['ApiGatewayStage'] = {
     Type: 'AWS::ApiGateway::Stage',
     Properties: {
-      StageName: 'attributes_dev',
+      StageName: 'foo_dev',
       DeploymentId: {
         Ref: 'ApiGatewayDeployment12345'
       }

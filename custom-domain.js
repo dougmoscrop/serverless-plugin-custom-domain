@@ -1,8 +1,9 @@
 'use strict';
 
+const addCustomResource = require('add-custom-resource');
+const path = require('path');
 const semver = require('semver');
 
-const addCustomResource = require('./lib/add-custom-resource');
 const removeMapping = require('./lib/remove-mapping');
 const utils = require('./lib/utils');
 
@@ -31,15 +32,49 @@ module.exports = class CustomDomain {
 
   beforePackage() {
     const domain = this.serverless.service.custom.domain;
+    const template = this.serverless.service.provider.compiledCloudFormationTemplate;
 
     if (domain) {
       const domainName = this.getDomainName(domain);
       const basePath = this.getBasePath(domain);
       const deploymentId = this.getApiGatewayDeploymentId();
-      const stageName = this.getApiGatewayStageName();
 
       if (deploymentId) {
-        this.addCustomResource(domainName, basePath, deploymentId, stageName);
+        const stage = this.getApiGatewayStage(deploymentId);
+        const dependencies = ['ApiGatewayRestApi', deploymentId];
+
+        if (stage.id) {
+          dependencies.push(stage.id);
+        }
+
+        addCustomResource(template, {
+          name: 'ApiGatewayBasePathMapping',
+          sourceCodePath: path.join(__dirname, 'lib/custom-resource.js'),
+          resource: {
+            properties: {
+              DomainName: domainName,
+              BasePath: basePath,
+              Stage: stage.name,
+              RestApi: {
+                Ref: 'ApiGatewayRestApi'
+              }
+            },
+            dependencies
+          },
+          role: {
+            policies: [{
+              PolicyName: 'apigateway-permissions',
+              PolicyDocument: {
+                Version: '2012-10-17',
+                Statement: [{
+                  Effect: 'Allow',
+                  Action: ['apigateway:*'],
+                  Resource: 'arn:aws:apigateway:*:*:*'
+                }]
+              }
+            }]
+          }
+        });
       } else {
         throw new Error('Could not find AWS::ApiGateway::Deployment resource in CloudFormation template!');
       }

@@ -1,6 +1,6 @@
 {
   "name": "serverless-plugin-custom-domain",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Set up and cut over custom domains for API Gateway",
   "main": "custom-domain.js",
   "scripts": {
@@ -22,13 +22,13 @@
   },
   "homepage": "https://github.com/dougmoscrop/serverless-plugin-custom-domain#readme",
   "devDependencies": {
-    "ava": "^0.20.0",
-    "eslint": "^4.1.1",
-    "nyc": "^11.0.3",
-    "sinon": "^2.3.6"
+    "ava": "^0.22.0",
+    "eslint": "^4.6.1",
+    "nyc": "^11.2.1",
+    "sinon": "^3.2.1"
   },
   "dependencies": {
-    "escape-json-node": "1.0.8",
-    "semver": "5.3.0"
+    "add-custom-resource": "^1.0.1",
+    "semver": "5.4.1"
   }
 }

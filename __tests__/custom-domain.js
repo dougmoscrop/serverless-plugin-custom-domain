@@ -1,6 +1,7 @@
 'use strict';
 
 const test = require('ava');
+const sinon = require('sinon');
 
 const Plugin = require('..');
 
@@ -55,4 +56,25 @@ test('throws if serverless is wrong versino', t => {
   });
 
   t.true(e.message.indexOf('requires serverless') !== -1);
+});
+
+test('remove does nothing if no domain set up', t => {
+  t.context.plugin.serverless.service.custom.domain = null;
+  const stub = sinon.stub(t.context.plugin, 'removeMapping');
+
+  t.context.plugin.beforeRemove();
+  t.false(stub.called);
+});
+
+test('remove calls when configured', t => {
+  t.context.plugin.serverless.service.custom.domain = 'foo.com';
+
+  const removeMapping = sinon.stub(t.context.plugin, 'removeMapping');
+
+  sinon.stub(t.context.plugin, 'getDomainName').returns('foo.com');
+  sinon.stub(t.context.plugin, 'getBasePath').returns('banana');
+
+  t.context.plugin.beforeRemove();
+
+  t.true(removeMapping.calledWith('banana', 'foo.com'));
 });

@@ -37,12 +37,8 @@ test('finds deployment id', t => {
 });
 
 test('finds stage name from deployment', t => {
-  const stageName = {
-    value: 'dev',
-    from: {
-      type: 'AWS::ApiGateway::Deployment',
-      key: 'ApiGatewayDeployment12345'
-    }
+  const expected = {
+    name: 'dev'
   };
 
   t.context.template.Resources['ApiGatewayDeployment12345'] = {
@@ -52,19 +48,14 @@ test('finds stage name from deployment', t => {
     }
   };
 
-  const realStageName = t.context.plugin.getApiGatewayStageName();
-  t.true(stageName.value === realStageName.value);
-  t.true(stageName.from.type === realStageName.from.type);
-  t.true(stageName.from.key === realStageName.from.key);
+  const actual = t.context.plugin.getApiGatewayStage('ApiGatewayDeployment12345');
+  t.deepEqual(expected, actual);
 });
 
 test('finds stage name from stage', t => {
-  const stageName = {
-    value: 'foo_dev',
-    from: {
-      type: 'AWS::ApiGateway::Stage',
-      key: 'ApiGatewayStage'
-    }
+  const expected = {
+    name: 'foo_dev',
+    id: 'ApiGatewayStage'
   };
 
   t.context.template.Resources['ApiGatewayDeployment12345'] = {
@@ -84,10 +75,8 @@ test('finds stage name from stage', t => {
     }
   };
 
-  const realStageName = t.context.plugin.getApiGatewayStageName();
-  t.true(stageName.value === realStageName.value);
-  t.true(stageName.from.type === realStageName.from.type);
-  t.true(stageName.from.key === realStageName.from.key);
+  const actual = t.context.plugin.getApiGatewayStage('ApiGatewayDeployment12345');
+  t.deepEqual(expected, actual);
 });
 
 test('getDomainName string', t => {

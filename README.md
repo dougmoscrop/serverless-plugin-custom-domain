@@ -27,8 +27,8 @@ custom:
 
 `custom.domain` can also be an object, with the following propeties:
 
-`name`: the domain name, same as the above string e.g. `${opt:region}.myservice.foo.com`
-`basePath:` a custom base path, instead of the default `(none)` - a base path is a prefix e.g. `/v1`
+- `name`: the domain name, same as the above string e.g. `${opt:region}.myservice.foo.com`
+- `basePath:` a custom base path, instead of the default `(none)` - a base path is a prefix e.g. `/v1`
 
 ## Notes
 

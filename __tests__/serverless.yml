@@ -2,7 +2,7 @@ service: groups-admn-bff
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
   region: ${opt:region}
   stage: ${opt:stage}
   profile: groups-admn-bff-${opt:stage}

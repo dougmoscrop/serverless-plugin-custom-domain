@@ -28,7 +28,7 @@
     "sinon": "^7.3.1"
   },
   "dependencies": {
-    "add-custom-resource": "^1.0.1",
+    "add-custom-resource": "^3.2.0",
     "semver": "5.4.1"
   }
 }

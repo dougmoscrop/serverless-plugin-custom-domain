@@ -39,15 +39,17 @@ module.exports = class CustomDomain {
       const basePath = this.getBasePath(domain);
       const deploymentId = this.getApiGatewayDeploymentId();
 
+      console.log('deployent', deploymentId);
       if (deploymentId) {
         const stage = this.getApiGatewayStage(deploymentId);
         const dependencies = ['ApiGatewayRestApi', deploymentId];
 
+        console.log('stage', stage);
         if (stage.id) {
           dependencies.push(stage.id);
         }
 
-        addCustomResource(template, {
+        return addCustomResource(template, {
           name: 'ApiGatewayBasePathMapping',
           sourceCodePath: path.join(__dirname, 'lib/custom-resource.js'),
           resource: {

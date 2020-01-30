@@ -22,13 +22,13 @@
   },
   "homepage": "https://github.com/dougmoscrop/serverless-plugin-custom-domain#readme",
   "devDependencies": {
-    "ava": "^1.4.1",
-    "eslint": "^4.6.1",
-    "nyc": "^14.0.0",
-    "sinon": "^7.3.1"
+    "ava": "^3.1.0",
+    "eslint": "^6.8.0",
+    "nyc": "^15.0.0",
+    "sinon": "^8.1.1"
   },
   "dependencies": {
-    "add-custom-resource": "^3.2.0",
-    "semver": "5.4.1"
+    "add-custom-resource": "^3.3.0",
+    "semver": "^7.1.1"
   }
 }

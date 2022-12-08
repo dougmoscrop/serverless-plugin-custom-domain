@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/dougmoscrop/serverless-plugin-custom-domain#readme",
   "devDependencies": {
-    "ava": "^3.1.0",
+    "ava": "^5.1.0",
     "eslint": "^6.8.0",
     "nyc": "^15.0.0",
     "sinon": "^8.1.1"

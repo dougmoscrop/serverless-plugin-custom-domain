@@ -2,6 +2,10 @@
 
 This is a plugin for Serverless that injects a [CloudFormation Custom Resource](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html) in your deployed stack that sets up a base path mapping between the `ApiGateway::Deployment` that Serverless creates, and an [API Gateway Custom Domain](http://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains.html).
 
+## 4.0.0
+
+This version uses a newer version of add-custom-resource which requires a newer Node.js runtime.
+
 ## 3.0.0
 
 This release brings in a new version of add-custom-resource that updates the runtime version of Lambda.  This means your custom resources may re-execute, and should be idempotent.  No actual changes in this library have been made, but this is just to be cautious.
